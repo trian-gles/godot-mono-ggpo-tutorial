@@ -1,0 +1,8 @@
+C:\Users\bkier\OneDrive\Documents\GGPO-Test\.mono\temp\obj\Debug\GGPO-Test.csproj.AssemblyReference.cache
+C:\Users\bkier\OneDrive\Documents\GGPO-Test\.mono\temp\obj\Debug\GGPO-Test.AssemblyInfoInputs.cache
+C:\Users\bkier\OneDrive\Documents\GGPO-Test\.mono\temp\obj\Debug\GGPO-Test.AssemblyInfo.cs
+C:\Users\bkier\OneDrive\Documents\GGPO-Test\.mono\temp\obj\Debug\GGPO-Test.csproj.CoreCompileInputs.cache
+C:\Users\bkier\OneDrive\Documents\GGPO-Test\.mono\temp\bin\Debug\GGPO-Test.dll
+C:\Users\bkier\OneDrive\Documents\GGPO-Test\.mono\temp\bin\Debug\GGPO-Test.pdb
+C:\Users\bkier\OneDrive\Documents\GGPO-Test\.mono\temp\obj\Debug\GGPO-Test.dll
+C:\Users\bkier\OneDrive\Documents\GGPO-Test\.mono\temp\obj\Debug\GGPO-Test.pdb
