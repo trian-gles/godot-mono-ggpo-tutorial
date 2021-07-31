@@ -1,0 +1,40 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Lobby.cs" type="Script" id=1]
+
+[node name="Lobby" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Join" type="Button" parent="."]
+margin_left = 524.06
+margin_top = 328.543
+margin_right = 624.06
+margin_bottom = 378.543
+text = "Join"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Host" type="Button" parent="."]
+margin_left = 530.947
+margin_top = 159.558
+margin_right = 630.947
+margin_bottom = 209.558
+text = "Host"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SyncTest" type="Button" parent="."]
+margin_left = 721.825
+margin_top = 245.863
+margin_right = 821.825
+margin_bottom = 295.863
+text = "Sync Test"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="button_down" from="Join" to="." method="OnJoinButtonDown"]
+[connection signal="button_down" from="Host" to="." method="OnHostButtonDown"]
+[connection signal="button_down" from="SyncTest" to="." method="OnSyncTestButtonDown"]
