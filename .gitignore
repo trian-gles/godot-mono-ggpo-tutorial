@@ -5,3 +5,8 @@
 bin/
 build/
 lib/
+
+
+.mono/
+.vs/
+synclogs/
