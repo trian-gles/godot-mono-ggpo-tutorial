@@ -14,3 +14,12 @@ text = "GAME"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Sync" type="Label" parent="."]
+margin_left = 554.995
+margin_top = 32.128
+margin_right = 594.995
+margin_bottom = 46.128
+__meta__ = {
+"_edit_use_anchors_": false
+}

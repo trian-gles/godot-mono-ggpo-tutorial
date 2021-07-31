@@ -13,17 +13,14 @@ public class Main : Node2D
     private const string IP = "127.0.0.1";
     private const int PLAYERNUMBERS = 2;
 
-    [Export]
-    private bool syncTest = false;
-
     private int localPlayerHandle;
     // result
     private Player playerInstance;
     private GameState gameState;
-    public void Setup(bool host)
+    public void Config(bool host, bool syncTest)
     {
-        if (host)
-        {
+        
+        if (host) {
             localPort = 7000;
             localHand = 1;
             otherPort = 7001;
@@ -36,21 +33,31 @@ public class Main : Node2D
             otherPort = 7000;
             otherHand = 1;
         }
+
+        int errorcode;
+
+
         if (syncTest)
         {
-            GGPO.StartSynctest("Test", PLAYERNUMBERS, 7);
+            errorcode = GGPO.StartSynctest("Test", PLAYERNUMBERS, 7);
+            GD.Print($"Starting synctest, errorcode {errorcode}");
         }
         else
         {
-            GGPO.StartSession("Match", PLAYERNUMBERS, localHand);
+            errorcode = GGPO.StartSession("ark", PLAYERNUMBERS, localPort);
+            GD.Print($"Starting regular session, errorcode {errorcode}");
         }
         ConnectEvents();
         gameState = new GameState();
         Godot.Collections.Dictionary localHandle = GGPO.AddPlayer(GGPO.PlayertypeLocal, localHand, IP, localPort);
         localPlayerHandle = (int) localHandle["playerHandle"];
-        GGPO.SetFrameDelay(localPlayerHandle, 2);
+        GD.Print($"Local add result: {localHandle["result"]}");
+
+        int frameDelayError = GGPO.SetFrameDelay(localPlayerHandle, 2);
+        GD.Print($"Frame delay error code: {frameDelayError}");
         GGPO.CreateInstance(gameState, nameof(gameState.SaveGameState));
-        GGPO.AddPlayer(GGPO.PlayertypeRemote, otherHand, IP, otherPort);
+        Godot.Collections.Dictionary remoteHandle = GGPO.AddPlayer(GGPO.PlayertypeRemote, otherHand, IP, otherPort);
+        GD.Print($"Remote add result:{remoteHandle["result"]}");
         RegisterPlayer(localPlayerHandle);
 
     }
@@ -58,10 +65,12 @@ public class Main : Node2D
     public override void _PhysicsProcess(float delta)
     {
         GGPOIdle();
+        GD.Print(GGPO.GetNetworkStats(2));
         int input = ReadInput();
         int result = 999;
         if (localPlayerHandle != GGPO.InvalidHandle)
         {
+            // GD.Print($"Adding local input {input}"); this works
             result = GGPO.AddLocalInput(localPlayerHandle, input);
         }
         if (result == GGPO.ErrorcodeSuccess)
@@ -70,14 +79,29 @@ public class Main : Node2D
             if ((int)resultDict["result"] == GGPO.ErrorcodeSuccess)
             {
                 GD.Print(resultDict["inputs"]);
-                Advance_Frame((int[])resultDict["inputs"]);
+                
+                Advance_Frame((Godot.Collections.Array)resultDict["inputs"]);
             }
+            
+        }
+        else if (result == GGPO.ErrorcodeNotSynchronized)
+        {
+            GetNode<Label>("Sync").Text = "Not synchronized";
         }
     }
-    public void Advance_Frame(int[] inputs)
+    public void Advance_Frame(Godot.Collections.Array inputs)
     {
         gameState.Update(inputs);
         GGPO.AdvanceFrame();
+    }
+
+    private void ConnectEvents()
+    {
+        GGPO.Singleton.Connect("advance_frame", this, nameof(OnAdvanceFrame));
+        GGPO.Singleton.Connect("load_game_state", this, nameof(OnLoadGameState));
+        GGPO.Singleton.Connect("event_disconnected_from_peer", this, nameof(OnEventDisconnectedFromPeer));
+        GGPO.Singleton.Connect("save_game_state", this, nameof(OnSaveGameState));
+        GGPO.Singleton.Connect("event_connected_to_peer", this, nameof(OnEventConnectedToPeer));
     }
     private void GGPOIdle()
     {
@@ -85,7 +109,7 @@ public class Main : Node2D
 
     int next = 0;
 
-        int now = 0;
+    int now = 0;
 
 
         GGPO.Idle(Math.Max(0, next - now - 1));
@@ -136,10 +160,11 @@ public class Main : Node2D
 
     public void OnEventConnectedToPeer(int handle)
     {
+        GD.Print("Connected to peer");
         RegisterPlayer(handle);
     }
 
-    public void OnAdvanceFrame(int[] inputs)
+    public void OnAdvanceFrame(Godot.Collections.Array inputs)
     {
         GD.Print($"Advance frame callback with inputs {inputs}");
         gameState.Update(inputs);
@@ -160,13 +185,6 @@ public class Main : Node2D
         gameState.Players.Add(playerInstance);
     }
 
-    private void ConnectEvents()
-    {
-        GGPO.Singleton.Connect("advance_frame", this, nameof(OnAdvanceFrame));
-        GGPO.Singleton.Connect("load_game_state", this, nameof(OnLoadGameState));
-        GGPO.Singleton.Connect("event_disconnected_from_peer", this, nameof(OnEventDisconnectedFromPeer));
-        GGPO.Singleton.Connect("save_game_state", this, nameof(OnSaveGameState));
-        GGPO.Singleton.Connect("event_connected_to_peer", this, nameof(OnEventConnectedToPeer));
-    }
+    
 
 }

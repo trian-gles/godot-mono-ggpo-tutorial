@@ -12,12 +12,12 @@ public class GameState : Node
         
     }
 
-    public void Update(int[] inputs)
+    public void Update(Godot.Collections.Array inputs)
     {
         int i = 0;
         foreach (Player p in Players)
         {
-            p.MovePlayer(inputs[i]);
+            p.MovePlayer((int) inputs[i]);
             i++;
         }
     }

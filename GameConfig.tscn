@@ -25,5 +25,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="SyncTest" type="Button" parent="."]
+margin_left = 721.825
+margin_top = 245.863
+margin_right = 821.825
+margin_bottom = 295.863
+text = "Sync Test"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="button_down" from="Join" to="." method="OnJoinButtonDown"]
 [connection signal="button_down" from="Host" to="." method="OnHostButtonDown"]
+[connection signal="button_down" from="SyncTest" to="." method="OnSyncTestButtonDown"]
